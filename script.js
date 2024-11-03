@@ -1,6 +1,17 @@
 
 
 let ids = 1;
+
+function updateCounters() {
+    const todoCount = document.getElementById("todo-count");
+    const doingCount = document.getElementById("doing-count");
+    const doneCount = document.getElementById("done-count");
+
+    todoCount.textContent = document.getElementById("list-container").childElementCount;
+    doingCount.textContent = document.getElementById("list-container2").childElementCount;
+    doneCount.textContent = document.getElementById("list-container3").childElementCount;
+}
+
 function myFunction(event) {
     event.preventDefault(); // Prevent form submission
 
@@ -57,7 +68,7 @@ function myFunction(event) {
                     </span>
                 </summary>
                 <p id="para2" class="text-neutral-600 mt-3 group-open:animate-fadeIn break-words m-2">${para2}</p>
-                <button  class="border border-white w-[70px] h-[30px] font-bold hover:bg-green-500 m-[6px]" onclick="edit_todo(event , ${ids})">Edit</button>
+                <button id="editbtn" class="border border-white w-[70px] h-[30px] font-bold hover:bg-green-500 m-[6px]" onclick="edit_todo(event , ${ids})">Edit</button>
             </details>
         </div>
     `;
@@ -77,25 +88,46 @@ function myFunction(event) {
     document.getElementById("in2").value = "";
 }
 
-function edit_todo(event, id){
+function edit_todo(event, id) {
     event.preventDefault();
     let task = document.getElementById(id);
     let inp = document.createElement("input");
     let para = task.querySelector('#para');
-    inp.value =  para.textContent;
+    inp.value = para.textContent;
 
-    let inp1= document.createElement("input");
+    let editbtn = task.querySelector('#editbtn');
+
+    let inp1 = document.createElement("input");
     let para1 = task.querySelector('#para2');
-    inp1.value =   para1.textContent;
-    console.log(task);
-    console.log(inp.value);
-    console.log(inp1.value);
-   // Remplacer les spans par les inputs
-    para.innerHTML = ''; // Vider le contenu du span
-    para.appendChild(inp); // Ajouter l'input au span
+    inp1.value = para1.textContent;
 
-    para1.innerHTML = ''; // Vider le contenu du span
-    para1.appendChild(inp1); // Ajouter l'input au span
+    para.innerHTML = ''; 
+    inp.className="border-s-neutral-100 border border-white bg-transparent text-black-500 w-[195.2px]   rounded-[8px] break-words"
+    para.appendChild(inp); 
 
+    para1.innerHTML = ''; 
+    inp1.className="border-s-neutral-100 border border-white bg-transparent text-black-500 h-[60px] w-[195.2px]  rounded-[8px] break-words"
+    para1.appendChild(inp1); 
+    
+    editbtn.innerText = "Save";
+    editbtn.onclick = function(event) {
+        enregistree(event, id, inp.value, inp1.value);
+    };
+}
 
+function enregistree(event, id, newTitle, newDescription) {
+    event.preventDefault();
+    let task = document.getElementById(id);
+    
+    let para = task.querySelector('#para');
+    let para1 = task.querySelector('#para2');
+
+    para.textContent = newTitle;
+    para1.textContent = newDescription;
+
+    let editbtn = task.querySelector('#editbtn');
+    editbtn.innerText = "Edit";
+    editbtn.onclick = function(event) {
+        edit_todo(event, id);
+    };
 }
